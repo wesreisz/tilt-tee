@@ -1,0 +1,38 @@
+version: '1.0'
+
+on:
+  push:
+    branches:
+      - main  # Or your default branch
+
+services:
+  docker:
+    image: docker:dind
+    privileged: true  # Required to run Docker in Docker
+
+jobs:
+  build:
+    name: Build web
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image (web)
+        run: |
+         docker build -t registry.localhost:5000/tilt-avatar-web:1.0.1 ../deploy/web.dockerfile
+         
+      - name: Push Docker Image to Local Registry
+        run: |
+          docker push registry.localhost:5000/tilt-avatar-web:1.0.1
+
+       - name: Build Docker Image (api)
+        run: |
+         docker build -t registry.localhost:5000/tilt-avatar-web:1.0.1 ../deploy/api.dockerfile
+         
+      - name: Push Docker Image to Local Registry
+        run: |
+          docker push registry.localhost:5000/tilt-avatar-api:1.0.1    
+
+     
+        
