@@ -11,7 +11,7 @@ app = flask.Flask("tilt-avatars-api")
 
 part_groups = {
     'facial_features': ['eyebrows', 'eyes', 'mouth', 'skin_color'],
-    'hair': ['top', 'hair_color', 'facial_hair', 'facial_hair_color'],
+    'hair': ['top', 'hair_color', 'facial_hair', 'facial_hair_color', 'facial_hair_color'],
     # ↓↓↓ remove the leading # to uncomment ↓↓↓
     # 'other': ['accessory']
     # ↑↑↑ remove the leading # to uncomment ↑↑↑
@@ -34,6 +34,7 @@ part_mapping = {
 docker_blue = '#086DD7'
 tilt_green = '#20BA31'
 
+
 @app.before_first_request
 def initialize():
     try:
@@ -44,6 +45,10 @@ def initialize():
         pa.ClothingType.TILT_SHIRT
     except AttributeError:
         pa.install_part(str(pathlib.Path(__file__).parent.joinpath('tilt_shirt.svg')), pa.ClothingType)
+    try:
+        pa.ClothingType.TW_SHIRT
+    except AttributeError:
+        pa.install_part(str(pathlib.Path(__file__).parent.joinpath('tw_shirt.svg')), pa.ClothingType)    
 
 
 @app.route('/api/avatar')
@@ -65,8 +70,8 @@ def avatar():
     clothing_color = tilt_green
 
     # ↓↓↓ remove the leading # to uncomment ↓↓↓
-    #clothing = 'docker_shirt'
-    #clothing_color = docker_blue
+    clothing = 'tw_shirt'
+    clothing_color = docker_blue
     # ↑↑↑ remove the leading # to uncomment ↑↑↑
 
     svg = pa.Avatar(
